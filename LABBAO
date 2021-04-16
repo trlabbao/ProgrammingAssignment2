@@ -1,0 +1,93 @@
+def answer_one():
+    return df[df['Gold'] == df['Gold'].max()].index[0]
+
+answer_one()
+
+
+
+
+
+
+
+def answer_two():
+    df['diff'] = abs(df['Gold'] - df['Gold.1'])
+    return df[df['diff'] == df['diff'].max()].index[0]
+
+answer_two()
+
+
+
+
+
+
+def answer_three():
+    sub_df = df[(df['Gold'] > 0) & (df['Gold.1'] > 0)].copy()
+    sub_df['rel'] = sub_df['diff'] / sub_df['Gold.2']
+    return sub_df[sub_df['rel'] == max(sub_df['rel'])].index[0]
+
+answer_three()
+
+
+
+
+
+def answer_four():
+    df['Points'] = df['Gold.2'] * 3 + df['Silver.2'] * 2 + df['Bronze.2'] * 1
+    return df['Points']
+
+answer_four()
+
+
+
+
+
+
+
+def answer_five():
+    return census_df.groupby('STNAME')['COUNTY'].count().idxmax()
+
+answer_five()
+
+
+
+
+
+
+
+def answer_six():
+    df1 = pd.DataFrame(census_df.where(census_df['SUMLEV'] == 50).groupby(['STNAME'])['POPESTIMATE2015'].nlargest(3))
+    df1 = df1.reset_index()
+
+    return list(df1.groupby(['STNAME']).sum()['POPESTIMATE2015'].nlargest(3).index)
+
+answer_six()
+
+
+
+
+
+
+
+
+def answer_seven():
+    d = census_df[census_df.SUMLEV==50].copy()
+    d['max'] = d[['POPESTIMATE2010','POPESTIMATE2011','POPESTIMATE2012','POPESTIMATE2013','POPESTIMATE2014','POPESTIMATE2015']].max(axis=1)
+    d['min'] = d[['POPESTIMATE2010','POPESTIMATE2011','POPESTIMATE2012','POPESTIMATE2013','POPESTIMATE2014','POPESTIMATE2015']].min(axis=1)
+    d['diff'] = d['max'] - d['min']
+
+    return d[d['diff'] == d['diff'].max()].iloc[0]['CTYNAME']
+
+answer_seven()
+
+
+
+
+
+
+
+def answer_eight():
+    counties_df = census_df[census_df['SUMLEV'] == 50]
+    ans = counties_df[((counties_df['REGION']==1)|(counties_df['REGION']==2))&(counties_df['CTYNAME']=='Washington County')&(counties_df['POPESTIMATE2015']>counties_df['POPESTIMATE2014'])][['STNAME','CTYNAME']]
+    return ans
+
+answer_eight()
